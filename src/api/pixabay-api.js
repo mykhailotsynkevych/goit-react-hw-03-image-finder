@@ -17,3 +17,18 @@ export const fetchPhotos = (query, page) => {
     })
     .then(response => response.data);
 };
+
+// export const fetchQueryPhotos = (query, page) => {
+//   return axios
+//     .get('?', {
+//       params: {
+//         q: query,
+//         page,
+//         key: API_KEY,
+//         image_type: 'photo',
+//         orientation: 'horizontal',
+//         per_page: 12,
+//       },
+//     })
+//     .then(response => response.data);
+// };
