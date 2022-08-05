@@ -21,22 +21,6 @@ export default class Searchbar extends Component {
     this.setState({ query: '' });
   };
 
-//   componentDidUpdate(prevProps, prevState) {
-//     const prevName = prevProps.pokemonName;
-//     const nextName = this.props.pokemonName;
-
-//     if (prevName !== nextName) {
-//       this.setState();
-
-//       setTimeout(() => {
-//         api
-//           .fetchPhotos(nextName)
-//           .then(pokemon => this.setState({ pokemon }))
-//           .catch(error => this.setState({ error }));
-//       }, 3000);
-//     }
-//   }
-
   render() {
     return (
       <header className="Searchbar">
@@ -54,7 +38,6 @@ export default class Searchbar extends Component {
           />
                     <button type="submit" className="SearchForm-button">
             <span style={{ fontSize: 26 }}>&#9906;</span>
-          {/* <span className="button-label">Search</span> */}
           </button>
         </form>
       </header>

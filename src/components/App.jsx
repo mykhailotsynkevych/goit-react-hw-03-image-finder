@@ -3,6 +3,7 @@ import { Component } from 'react';
 import {fetchPhotos} from '../api/pixabay-api'
 import ImageGallery from './ImageGallery/ImageGallery'
 import Searchbar from './Searchbar/Searchbar'
+import Button from './Button/Button'
 
 
 export class App extends Component {
@@ -10,58 +11,50 @@ export class App extends Component {
     fotos: [],
     query: "",
     loading: false,
+    totalResult: 0,
+    page: 1,
   };
 
   componentDidMount() {
+    const { page } = this.state;
     this.setState({ loading: true });
-    fetchPhotos().then((fotos) => this.setState({ fotos: fotos, loading: false}));
+    fetchPhotos(page).then(({hits, totalHits}) => this.setState({ fotos: hits, totalResult: totalHits, loading: false}));
   }
 
       handleFormSubmit = (query) => {
         this.setState({ query: query });
   };
 
-    componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
+      const { page } = this.state;
 
     if (this.state.query !== prevState.query) {
 fetchPhotos(this.state.query).then((fotos) => this.setState({ fotos: fotos, loading: false}));
+      }
+      
+          if (this.state.page !== prevState.page) {
+      this.setState({ loading: true });
+      fetchPhotos(page)
+        .then(({ hits, totalResults }) =>
+          this.setState((prev) => ({
+            fotos: [...prev.fotos, ...hits],
+          }))
+        )
     }
   }
 
-
-
-  // async componentDidMount() {
-  //     this.setState({ loading: true });
-  //   const response = await axios.get("?q=car&page=1&key=28586147-3ab4251b0e4522a1aabc38539&image_type=photo&orientation=horizontal&per_page=12");
-  //   this.setState({
-  //     fotos: response.data.hits,
-  //   loading: false,});
-  // }
-
-  //   handleFormSubmit = query => {
-  //     this.setState({ fotos: query });
-  // };
-
-  
-  // componentDidMount() {
-  //   fetch('https://pixabay.com/api/?q=car&page=1&key=28586147-3ab4251b0e4522a1aabc38539&image_type=photo&orientation=horizontal&per_page=12')
-  //     .then(res => res.json())
-  //     .then(hits => this.setState(hits))
-
-    
-  // }
-
-  // handleFormSubmit = pokemonName => {
-  //   this.setState({ pokemonName });
-  // };
+    updatePage = () => {
+    this.setState((prev) => ({ page: prev.page + 1 }));
+  };
 
   render() {
-    const { fotos } = this.state;
+    const { fotos, totalResult } = this.state;
     return (
       <div>
         <Searchbar onSubmit={this.handleFormSubmit}/>
         {this.state.loading && <h2>Loading...</h2>}
         {fotos.length > 0 ? <ImageGallery fotos={fotos} /> : null}
+        {fotos.length > 0 && fotos.length < totalResult && <Button updatePage={this.updatePage} />}
       </div>
     );
   }
