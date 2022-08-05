@@ -5,7 +5,7 @@ import ImageGallery from './ImageGallery/ImageGallery';
 import Searchbar from './Searchbar/Searchbar';
 import Button from './Button/Button';
 // import Modal from './Modal/Modal';
-import { Bars } from  'react-loader-spinner'
+import { Bars } from 'react-loader-spinner';
 
 export class App extends Component {
   state = {
@@ -16,6 +16,13 @@ export class App extends Component {
     page: 1,
   };
 
+  //   static getDerivedStateFromProps(nextProps, prevState) {
+  //   if (nextProps.searchInput !== prevState.searchInput) {
+  //     return { page: 1, searchInput: nextProps.searchInput };
+  //   }
+  //   return null;
+  // }
+
   componentDidMount() {
     const { page } = this.state;
     this.setState({ loading: true });
@@ -25,7 +32,7 @@ export class App extends Component {
   }
 
   handleFormSubmit = query => {
-    this.setState({ query: query, page: 1 });
+    this.setState({ query: query });
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -33,13 +40,13 @@ export class App extends Component {
 
     if (this.state.query !== prevState.query) {
       fetchPhotos(query, page).then(({ hits }) =>
-        this.setState({ fotos: hits, loading: false })
+        this.setState({ fotos: hits, loading: false, page: 1 })
       );
     }
 
     if (this.state.page !== prevState.page) {
       this.setState({ loading: true });
-      fetchPhotos(query ,page).then(({ hits, totalResults }) =>
+      fetchPhotos(query, page).then(({ hits, totalResults }) =>
         this.setState(prev => ({
           fotos: [...prev.fotos, ...hits],
           query,
@@ -48,9 +55,12 @@ export class App extends Component {
       );
     }
   }
-
+  
   updatePage = () => {
-    this.setState(prev => ({ page: prev.page + 1 }));
+
+    this.setState(prev => ({
+      page: prev.page + 1
+    }));
   };
 
   render() {
