@@ -1,18 +1,16 @@
 import { Component } from 'react';
-// import api from '../../api/pixabay-api.js';
-
 
 export default class Searchbar extends Component {
   state = {
-    query: [],
+    query: "",
   };
 
   handleNameChange = event => {
-    this.setState({ query: event.currentTarget.value.toLowerCase() });
+    this.setState({ query: event.target.value });
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
+  handleSubmit = e => {
+    e.preventDefault();
 
         if (this.state.query.trim() === '') {
       alert('Введите запрос.');

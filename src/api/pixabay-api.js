@@ -1,17 +1,19 @@
-function fetchPhotos(name) {
-  return fetch(
-    `https://pixabay.com/api/?q=${name}&page=1&key=28586147-3ab4251b0e4522a1aabc38539&image_type=photo&orientation=horizontal&per_page=12`
-  ).then(response => {
-    if (response.ok) {
-      return response.json();
-    }
+import axios from "axios";
 
-    return Promise.reject(new Error(`Нет покемона с именем ${name}`));
-  });
+axios.defaults.baseURL = "https://pixabay.com/api/";
+const API_KEY = '28586147-3ab4251b0e4522a1aabc38539';
+
+export const fetchPhotos = (query) => {
+  return     axios.get("?", {
+    params: {
+      q: query,
+      page: 1,
+      key: API_KEY,
+      image_type: "photo",
+      orientation: "horizontal",}
+    }).then((response) => response.data.hits);
 }
 
-const api = {
-  fetchPhotos,
-};
 
-export default api;
+
+
