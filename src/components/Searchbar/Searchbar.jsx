@@ -37,7 +37,7 @@ export default class Searchbar extends Component {
             value={this.state.query}
           />
                     <button type="submit" className="SearchForm-button">
-            <span style={{ fontSize: 26 }}>&#9906;</span>
+            <span style={{ fontSize: 30 }}>&#9906;</span>
           </button>
         </form>
       </header>

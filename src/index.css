@@ -73,6 +73,7 @@ img {
 }
 
 .SearchForm-button {
+  padding-bottom: 5px;
   display: inline-block;
   width: 48px;
   height: 48px;
@@ -103,13 +104,14 @@ img {
 }
 
 .SearchForm-input {
+  padding-bottom: 3px;
   display: inline-block;
   width: 100%;
   font: inherit;
-  font-size: 20px;
+  font-size: 18px;
   border: none;
   outline: none;
-  padding-left: 4px;
+  padding-left: 6px;
   padding-right: 4px;
 }
 

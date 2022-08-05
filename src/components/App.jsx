@@ -37,7 +37,7 @@ fetchPhotos(this.state.query).then((fotos) => this.setState({ fotos: fotos, load
       fetchPhotos(page)
         .then(({ hits, totalResults }) =>
           this.setState((prev) => ({
-            fotos: [...prev.fotos, ...hits],
+            fotos: [...prev.fotos, ...hits], loading: false 
           }))
         )
     }
@@ -52,9 +52,9 @@ fetchPhotos(this.state.query).then((fotos) => this.setState({ fotos: fotos, load
     return (
       <div>
         <Searchbar onSubmit={this.handleFormSubmit}/>
-        {this.state.loading && <h2>Loading...</h2>}
         {fotos.length > 0 ? <ImageGallery fotos={fotos} /> : null}
         {fotos.length > 0 && fotos.length < totalResult && <Button updatePage={this.updatePage} />}
+        {this.state.loading && <h2>Loading...</h2>}
       </div>
     );
   }
