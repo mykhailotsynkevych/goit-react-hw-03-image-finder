@@ -14,7 +14,6 @@ export class App extends Component {
     loading: false,
     totalHits: 0,
     page: 1,
-    isModal: false,
     modalFoto: null,
   };
 
@@ -80,7 +79,7 @@ export class App extends Component {
   // <h2>Sorry, no photos for "{query}"</h2>
 
   render() {
-    const { fotos, totalHits, isModal, modalFoto } = this.state;
+    const { fotos, totalHits, modalFoto } = this.state;
     return (
       <div>
         <Searchbar onSubmit={this.handleFormSubmit} />
