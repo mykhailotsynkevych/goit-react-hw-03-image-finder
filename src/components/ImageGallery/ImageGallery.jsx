@@ -15,21 +15,3 @@ const ImageGallery = ({ fotos }) => {
 };
 
 export default ImageGallery;
-
-// const ContactsList = ({ contactsList, onDeleteContact}) => {
-//   return (
-//     <div className={s.wrap}>
-//       <ul className={s.list} >
-//         {contactsList.map(contactEl => (
-//             <ContactsEl
-//             key={contactEl.id}
-//             id={contactEl.id}
-//             name={contactEl.name}
-//             number={contactEl.number}
-//             onDeleteContact={onDeleteContact}
-//           />
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// };

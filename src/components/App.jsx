@@ -1,10 +1,10 @@
 import { Component } from 'react';
 
-import { fetchPhotos } from '../api/pixabay-api';
+import { fetchPhotos, fetchQueryPhotos } from '../api/pixabay-api';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Searchbar from './Searchbar/Searchbar';
 import Button from './Button/Button';
-// import Modal from './Modal/Modal';
+import Modal from './Modal/Modal';
 import { Bars } from 'react-loader-spinner';
 
 export class App extends Component {
@@ -12,23 +12,21 @@ export class App extends Component {
     fotos: [],
     query: '',
     loading: false,
-    totalResult: 0,
+    totalHits: 0,
     page: 1,
+    isModal: false,
+    modalFoto: null,
   };
-
-  //   static getDerivedStateFromProps(nextProps, prevState) {
-  //   if (nextProps.searchInput !== prevState.searchInput) {
-  //     return { page: 1, searchInput: nextProps.searchInput };
-  //   }
-  //   return null;
-  // }
 
   componentDidMount() {
     const { page } = this.state;
     this.setState({ loading: true });
-    fetchPhotos(page).then(({ hits, totalHits }) =>
-      this.setState({ fotos: hits, totalResult: totalHits, loading: false })
-    );
+    fetchPhotos(page)
+      .then(({ hits, totalHits }) => this.setState({ fotos: hits, totalHits }))
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => this.setState({ loading: false }));
   }
 
   handleFormSubmit = query => {
@@ -38,42 +36,56 @@ export class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { query, page } = this.state;
 
-    if (this.state.query !== prevState.query) {
-      fetchPhotos(query, page).then(({ hits }) =>
-        this.setState({ fotos: hits, loading: false, page: 1 })
-      );
+    if (this.state.page !== prevState.page && query) {
+      this.setSearchPhotos();
     }
 
-    if (this.state.page !== prevState.page) {
+    if (this.state.page !== prevState.page && !query) {
       this.setState({ loading: true });
-      fetchPhotos(query, page).then(({ hits, totalResults }) =>
-        this.setState(prev => ({
-          fotos: [...prev.fotos, ...hits],
-          query,
-          loading: false,
-        }))
-      );
+      fetchPhotos(page)
+        .then(({ hits }) =>
+          this.setState(prev => ({
+            fotos: [...prev.fotos, ...hits],
+          }))
+        )
+        .catch(err => console.log(err))
+        .finally(() => this.setState({ loading: false }));
     }
   }
-  
-  updatePage = () => {
 
+  setSearchPhotos = () => {
+    const { page, query } = this.state;
+    this.setState({ loading: true });
+    fetchQueryPhotos(page, query)
+      .then(({ hits, totalHits }) => {
+        this.setState(prev => ({
+          fotos: page === 1 ? hits : [...prev.fotos, ...hits],
+          totalHits,
+        }));
+      })
+      .catch(err => console.log(err))
+      .finally(() => this.setState({ loading: false }));
+  };
+
+  updatePage = () => {
     this.setState(prev => ({
-      page: prev.page + 1
+      page: prev.page + 1,
     }));
   };
 
+  // <h2>Sorry, no photos for "{query}"</h2>
+
   render() {
-    const { fotos, totalResult } = this.state;
+    const { fotos, totalHits, isModal } = this.state;
     return (
       <div>
         <Searchbar onSubmit={this.handleFormSubmit} />
         {fotos.length > 0 ? <ImageGallery fotos={fotos} /> : null}
-        {fotos.length > 0 && fotos.length < totalResult && (
+        {fotos.length > 0 && fotos.length < totalHits && (
           <Button updatePage={this.updatePage} />
         )}
+        {isModal && <Modal fotos={fotos} />}
         {this.state.loading && <Bars color="#00BFFF" height={80} width={80} />}
-        {/* <Modal fotos={fotos} /> */}
       </div>
     );
   }
