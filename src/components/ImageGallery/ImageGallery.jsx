@@ -1,13 +1,15 @@
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem'
 
-const ImageGallery = ({ fotos }) => {
+const ImageGallery = ({ fotos, setModalFoto }) => {
   return (
   <ul className="ImageGallery">
     {fotos.map(image => (
-            <ImageGalleryItem
+      <ImageGalleryItem
             key={image.id}
             id={image.id}
-            webformatURL={image.webformatURL}
+        webformatURL={image.webformatURL}
+        largeImageURL={image.largeImageURL}
+        setModalFoto={setModalFoto}
           />
     ))}
   </ul>

@@ -33,6 +33,10 @@ export class App extends Component {
     this.setState({ query: query });
   };
 
+  setModalFoto = (modalFoto = null) => {
+    this.setState({ modalFoto });
+  };
+
   componentDidUpdate(prevProps, prevState) {
     const { query, page } = this.state;
 
@@ -76,15 +80,15 @@ export class App extends Component {
   // <h2>Sorry, no photos for "{query}"</h2>
 
   render() {
-    const { fotos, totalHits, isModal } = this.state;
+    const { fotos, totalHits, isModal, modalFoto } = this.state;
     return (
       <div>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {fotos.length > 0 ? <ImageGallery fotos={fotos} /> : null}
+        {fotos.length > 0 ? <ImageGallery fotos={fotos} setModalFoto={this.setModalFoto} /> : null}
         {fotos.length > 0 && fotos.length < totalHits && (
           <Button updatePage={this.updatePage} />
         )}
-        {isModal && <Modal fotos={fotos} />}
+        {modalFoto && <Modal modalFoto={modalFoto} setModalFoto={this.setModalFoto} />}
         {this.state.loading && <Bars color="#00BFFF" height={80} width={80} />}
       </div>
     );
