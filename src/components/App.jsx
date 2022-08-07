@@ -39,8 +39,22 @@ export class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { query, page } = this.state;
 
-    if (this.state.page !== prevState.page && query) {
-      this.setSearchPhotos();
+    if (this.state.query !== prevState.query) {
+      fetchQueryPhotos(query).then(({ hits, totalHits }) => {
+        this.setState({ fotos: hits, totalHits, page: 1 });
+      });
+    }
+
+    if (this.state.page !== prevState.page && this.state.page !== 1 && query) {
+      this.setState({ loading: true });
+      fetchQueryPhotos(query, page)
+        .then(({ hits }) =>
+          this.setState(prev => ({
+            fotos: [...prev.fotos, ...hits],
+          }))
+        )
+        .catch(err => console.log(err))
+        .finally(() => this.setState({ loading: false }));
     }
 
     if (this.state.page !== prevState.page && !query) {
@@ -56,20 +70,6 @@ export class App extends Component {
     }
   }
 
-  setSearchPhotos = () => {
-    const { page, query } = this.state;
-    this.setState({ loading: true });
-    fetchQueryPhotos(page, query)
-      .then(({ hits, totalHits }) => {
-        this.setState(prev => ({
-          fotos: page === 1 ? hits : [...prev.fotos, ...hits],
-          totalHits,
-        }));
-      })
-      .catch(err => console.log(err))
-      .finally(() => this.setState({ loading: false }));
-  };
-
   updatePage = () => {
     this.setState(prev => ({
       page: prev.page + 1,
@@ -83,11 +83,15 @@ export class App extends Component {
     return (
       <div>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {fotos.length > 0 ? <ImageGallery fotos={fotos} setModalFoto={this.setModalFoto} /> : null}
+        {fotos.length > 0 ? (
+          <ImageGallery fotos={fotos} setModalFoto={this.setModalFoto} />
+        ) : null}
         {fotos.length > 0 && fotos.length < totalHits && (
           <Button updatePage={this.updatePage} />
         )}
-        {modalFoto && <Modal modalFoto={modalFoto} setModalFoto={this.setModalFoto} />}
+        {modalFoto && (
+          <Modal modalFoto={modalFoto} setModalFoto={this.setModalFoto} />
+        )}
         {this.state.loading && <Bars color="#00BFFF" height={80} width={80} />}
       </div>
     );

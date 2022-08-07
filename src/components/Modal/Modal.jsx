@@ -10,12 +10,11 @@ class Modal extends Component {
     window.addEventListener("keydown", this.handleModalClose);
   }
 
-  //   componentWillUnmount() {
-  //   window.removeEventListener("keydown", this.handleModalClose);
-  // }
+    componentWillUnmount() {
+    window.removeEventListener("keydown", this.handleModalClose);
+  }
 
   handleModalClose = (e) => {
-    console.log("Modal");
     if (e.target !== e.currentTarget || e.code === "Escape"){
       this.props.setModalFoto();
 }
