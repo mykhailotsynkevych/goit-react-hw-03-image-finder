@@ -15,7 +15,7 @@ class Modal extends Component {
   }
 
   handleModalClose = (e) => {
-    if (e.target !== e.currentTarget || e.code === "Escape"){
+    if (e.target === e.currentTarget || e.code === "Escape"){
       this.props.setModalFoto();
 }
 
