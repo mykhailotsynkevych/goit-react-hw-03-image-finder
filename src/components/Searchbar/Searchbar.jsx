@@ -2,7 +2,7 @@ import { Component } from 'react';
 
 export default class Searchbar extends Component {
   state = {
-    query: "",
+    query: '',
   };
 
   handleNameChange = event => {
@@ -12,12 +12,12 @@ export default class Searchbar extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-        if (this.state.query.trim() === '') {
+    if (this.state.query.trim() === '') {
       alert('Введите запрос.');
       return;
     }
 
-     this.props.onSubmit(this.state.query);
+    this.props.onSubmit(this.state.query);
     this.setState({ query: '' });
   };
 
@@ -25,8 +25,6 @@ export default class Searchbar extends Component {
     return (
       <header className="Searchbar">
         <form className="SearchForm" onSubmit={this.handleSubmit}>
-
-
           <input
             className="SearchForm-input"
             type="text"
@@ -36,8 +34,8 @@ export default class Searchbar extends Component {
             onChange={this.handleNameChange}
             value={this.state.query}
           />
-                    <button type="submit" className="SearchForm-button">
-            <span style={{ fontSize: 30 }}>&#9906;</span>
+          <button type="submit" className="SearchForm-button">
+            <span style={{ fontSize: 32 }}>&#9906;</span>
           </button>
         </form>
       </header>
