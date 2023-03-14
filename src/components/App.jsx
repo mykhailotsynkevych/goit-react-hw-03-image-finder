@@ -92,7 +92,17 @@ export class App extends Component {
         {modalFoto && (
           <Modal modalFoto={modalFoto} setModalFoto={this.setModalFoto} />
         )}
-        {this.state.loading && <Bars color="#00BFFF" height={80} width={80} />}
+
+        {this.state.loading && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Bars color="#00BFFF" height={80} width={80} />
+          </div>
+        )}
       </div>
     );
   }
