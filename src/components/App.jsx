@@ -15,15 +15,17 @@ export class App extends Component {
     totalHits: 0,
     page: 1,
     modalFoto: null,
+    error: null,
   };
 
   componentDidMount() {
-    const { page } = this.state;
+    const { page} = this.state;
     this.setState({ loading: true });
     fetchPhotos(page)
       .then(({ hits, totalHits }) => this.setState({ fotos: hits, totalHits }))
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        console.log(error);
+        this.setState({ error});
       })
       .finally(() => this.setState({ loading: false }));
   }
@@ -76,12 +78,11 @@ export class App extends Component {
     }));
   };
 
-  // <h2>Sorry, no photos for "{query}"</h2>
-
   render() {
-    const { fotos, totalHits, modalFoto } = this.state;
+    const { fotos, totalHits, modalFoto, loading, error } = this.state;
     return (
       <div>
+        {error && <p>Whoops, something went wrong: {error.message}</p>}
         <Searchbar onSubmit={this.handleFormSubmit} />
         {fotos.length > 0 ? (
           <ImageGallery fotos={fotos} setModalFoto={this.setModalFoto} />
@@ -93,11 +94,11 @@ export class App extends Component {
           <Modal modalFoto={modalFoto} setModalFoto={this.setModalFoto} />
         )}
 
-        {this.state.loading && (
+        {loading && (
           <div
             style={{
-              display: "flex",
-              justifyContent: "center",
+              display: 'flex',
+              justifyContent: 'center',
             }}
           >
             <Bars color="#00BFFF" height={80} width={80} />
